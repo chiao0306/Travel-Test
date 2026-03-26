@@ -28,7 +28,6 @@ st.write("你的隨身數位導遊，點擊上方分頁切換每日行程！")
 # ==========================================
 # 2. 側邊欄：小工具 (天氣、匯率)
 # ==========================================
-st.sidebar.image("https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", caption="Tokyo Vibes")
 st.sidebar.header("📊 即時旅遊資訊")
 st.sidebar.metric("今日日幣匯率 (參考)", "0.212", "-0.001")
 st.sidebar.metric("東京天氣", "18°C 🌤️", "適合穿薄外套")
