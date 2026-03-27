@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>2025 東京自駕專屬</title>
+    <title>2025 東京專屬行程</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -12,145 +12,242 @@
         ::-webkit-scrollbar { display: none; }
         .app-container { max-width: 480px; margin: 0 auto; background-color: #F8F9FA; min-height: 100vh; position: relative; padding-bottom: 90px; }
         
-        /* 封面圖特效 */
+        /* 封面圖 */
         .hero-image {
-            background-image: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1503899036084-c55cdd92da26?q=80&w=800&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1503899036084-c55cdd92da26?q=80&w=800&auto=format&fit=crop');
+            background-size: cover; background-position: center;
         }
 
-        /* 垂直時間軸的線 */
-        .timeline-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 64px; /* 對齊圓點 */
-            width: 2px;
-            background-color: #E5E7EB;
-            z-index: 0;
+        /* 折疊動畫過渡 */
+        .card-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+            opacity: 0;
         }
+        .card-details.open {
+            max-height: 500px; /* 給予足夠的展開空間 */
+            opacity: 1;
+        }
+        .chevron { transition: transform 0.3s ease; }
+        .chevron.open { transform: rotate(180deg); }
+        
+        /* 隱藏原生滾動條的橫向滑動區 */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body>
 
 <div class="app-container shadow-xl">
     
-    <div class="hero-image h-64 w-full relative rounded-b-3xl shadow-md">
-        <div class="absolute top-0 w-full p-5 flex justify-between items-center text-white">
-            <i class="fa-solid fa-chevron-left text-xl"></i>
-            <div class="flex gap-3">
-                <i class="fa-solid fa-share-nodes text-xl"></i>
-                <i class="fa-regular fa-heart text-xl"></i>
-            </div>
-        </div>
-        
+    <div class="hero-image h-48 w-full relative rounded-b-3xl shadow-md">
         <div class="absolute bottom-5 left-5 text-white">
-            <span class="bg-black/30 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold mb-2 inline-block">自駕遊</span>
-            <h1 class="text-3xl font-black mb-1">2025 東京富士山</h1>
-            <p class="text-sm opacity-90 mb-3"><i class="fa-regular fa-calendar mr-1"></i> 共 4 天</p>
-            <div class="flex -space-x-2">
-                <img class="w-8 h-8 rounded-full border-2 border-white object-cover" src="https://ui-avatars.com/api/?name=Me&background=0D8ABC&color=fff" alt="User">
-                <div class="w-8 h-8 rounded-full border-2 border-white bg-gray-200 flex items-center justify-center text-xs text-gray-600">+1</div>
-            </div>
+            <span class="bg-blue-600 px-3 py-1 rounded-full text-xs font-bold mb-2 inline-block">2025 行程表</span>
+            <h1 class="text-3xl font-black mb-1">東京・富士山・鎌倉</h1>
+            <p class="text-sm opacity-90"><i class="fa-regular fa-calendar mr-1"></i> 7 天 6 夜</p>
         </div>
     </div>
 
-    <div class="px-5 py-4 flex justify-between items-center sticky top-0 bg-[#F8F9FA]/90 backdrop-blur-md z-40 border-b border-gray-100">
-        <div class="flex gap-4 overflow-x-auto no-scrollbar pb-1">
-            <button class="font-bold text-lg text-black border-b-2 border-black pb-1 whitespace-nowrap">Day 1</button>
-            <button class="font-bold text-lg text-gray-400 pb-1 whitespace-nowrap">Day 2</button>
-            <button class="font-bold text-lg text-gray-400 pb-1 whitespace-nowrap">Day 3</button>
-            <button class="font-bold text-lg text-gray-400 pb-1 whitespace-nowrap">Day 4</button>
-        </div>
-        <div class="w-12 h-12 bg-white rounded-xl shadow-sm border border-gray-200 flex items-center justify-center overflow-hidden relative cursor-pointer active:scale-95 transition-transform">
-            <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=100&h=100&fit=crop" class="absolute inset-0 opacity-50" alt="Map">
-            <i class="fa-solid fa-map-location-dot z-10 text-gray-800 text-lg"></i>
-        </div>
+    <div class="px-2 py-3 sticky top-0 bg-[#F8F9FA]/95 backdrop-blur-md z-40 border-b border-gray-200">
+        <div id="day-nav" class="flex gap-4 overflow-x-auto no-scrollbar px-3 pb-1">
+            </div>
     </div>
 
-    <div class="px-5 py-6 timeline-container relative">
-        
-        <div class="relative z-10 flex mb-8">
-            <div class="w-12 pt-1 text-right pr-3">
-                <span class="text-sm font-bold text-gray-800 block">13:05</span>
+    <div class="px-5 py-6">
+        <div class="text-sm font-bold text-gray-400 mb-4 ml-1" id="current-date-title"></div>
+        <div id="timeline-container" class="relative">
+            <div class="absolute top-0 bottom-0 left-[54px] w-0.5 bg-gray-200 z-0"></div>
             </div>
-            <div class="w-6 h-6 rounded-full border-4 border-[#F8F9FA] bg-blue-500 absolute left-[52px] top-1"></div>
-            <div class="ml-8 bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex-1">
-                <h3 class="font-bold text-gray-900 mb-1">抵達成田機場</h3>
-                <p class="text-xs text-gray-500 mb-3">亞航 FD: 234，辦理租車手續。</p>
-                <a href="https://www.google.com/maps/dir/?api=1&destination=名代+宇奈とと+上野店1" target="_blank" class="block w-full bg-blue-50 text-blue-600 text-center text-xs font-bold py-2 rounded-lg">
-                    <i class="fa-solid fa-car-side"></i> 導航至 WING HOTEL
-                </a>
-            </div>
-        </div>
-
-        <div class="relative z-10 flex mb-8">
-            <div class="w-12 pt-1 text-right pr-3">
-                <span class="text-sm font-bold text-gray-800 block">16:30</span>
-                <span class="text-[10px] text-gray-400">1.5 hr</span>
-            </div>
-            <div class="w-6 h-6 rounded-full border-4 border-[#F8F9FA] bg-indigo-500 absolute left-[52px] top-1"></div>
-            
-            <div class="ml-8 bg-white rounded-2xl shadow-sm border border-gray-100 flex-1 overflow-hidden">
-                <div class="h-24 w-full bg-gray-200">
-                    <img src="https://images.unsplash.com/photo-1542051812871-f1110db44547?q=80&w=400&h=200&fit=crop" class="w-full h-full object-cover" alt="谷中銀座">
-                </div>
-                <div class="p-4">
-                    <h3 class="font-bold text-gray-900 mb-1">谷中銀座商店街</h3>
-                    <div class="flex gap-2 mb-2">
-                        <span class="bg-indigo-50 text-indigo-600 text-[10px] font-bold px-2 py-0.5 rounded">夕陽階梯</span>
-                        <span class="bg-orange-50 text-orange-600 text-[10px] font-bold px-2 py-0.5 rounded">貓尾巴雞蛋糕</span>
-                    </div>
-                    <p class="text-xs text-gray-500">充滿昭和風情的貓咪老街，傍晚光影最美。</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="relative z-10 flex mb-2">
-            <div class="w-12 pt-1 text-right pr-3">
-                <span class="text-sm font-bold text-gray-800 block">19:00</span>
-            </div>
-            <div class="w-6 h-6 rounded-full border-4 border-[#F8F9FA] bg-orange-400 absolute left-[52px] top-1"></div>
-            
-            <div class="ml-8 bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex-1 flex gap-3">
-                <div class="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
-                    <img src="https://images.unsplash.com/photo-1615486171448-4af62939b4b0?q=80&w=200&h=200&fit=crop" class="w-full h-full object-cover" alt="鰻魚飯">
-                </div>
-                <div>
-                    <h3 class="font-bold text-gray-900 text-sm mb-1">名代 宇奈とと 上野店</h3>
-                    <p class="text-[11px] text-gray-500 mb-1">超高 CP 值的現烤鰻魚飯</p>
-                    <a href="https://www.google.com/maps/dir/?api=1&destination=名代+宇奈とと+上野店2" target="_blank" class="text-blue-500 text-xs font-bold"><i class="fa-solid fa-location-arrow"></i> 導航</a>
-                </div>
-            </div>
-        </div>
-
     </div>
 
     <div class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-100 pb-safe pt-2 px-6 flex justify-around items-center z-50">
-        <div class="flex flex-col items-center p-2 text-blue-600">
-            <i class="fa-solid fa-calendar-days text-xl mb-1"></i>
-            <span class="text-[10px] font-bold">行程</span>
-        </div>
-        <div class="flex flex-col items-center p-2 text-gray-400">
-            <i class="fa-solid fa-compass text-xl mb-1"></i>
-            <span class="text-[10px] font-bold">探索</span>
-        </div>
+        <div class="flex flex-col items-center p-2 text-blue-600"><i class="fa-solid fa-calendar-days text-xl mb-1"></i><span class="text-[10px] font-bold">行程</span></div>
+        <div class="flex flex-col items-center p-2 text-gray-400"><i class="fa-solid fa-compass text-xl mb-1"></i><span class="text-[10px] font-bold">探索</span></div>
         <div class="flex flex-col items-center p-2 text-gray-400 relative">
-            <div class="absolute -top-6 bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg shadow-blue-200 border-4 border-white">
-                <i class="fa-solid fa-plus text-xl"></i>
-            </div>
+            <div class="absolute -top-6 bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg shadow-blue-200"><i class="fa-solid fa-plus text-xl"></i></div>
         </div>
-        <div class="flex flex-col items-center p-2 text-gray-400">
-            <i class="fa-solid fa-wallet text-xl mb-1"></i>
-            <span class="text-[10px] font-bold">記帳</span>
-        </div>
-        <div class="flex flex-col items-center p-2 text-gray-400">
-            <i class="fa-solid fa-user text-xl mb-1"></i>
-            <span class="text-[10px] font-bold">我的</span>
-        </div>
+        <div class="flex flex-col items-center p-2 text-gray-400"><i class="fa-solid fa-wallet text-xl mb-1"></i><span class="text-[10px] font-bold">記帳</span></div>
+        <div class="flex flex-col items-center p-2 text-gray-400"><i class="fa-solid fa-user text-xl mb-1"></i><span class="text-[10px] font-bold">我的</span></div>
     </div>
 </div>
 
+<script>
+    // 這裡是你完整的 7 天行程資料 (JSON 格式)，未來要修改文字只要改這裡就好！
+    const itineraryData = [
+        {
+            dayId: 1, date: "5/17 (六)", title: "高雄 - 赤羽 - 上野",
+            events: [
+                { time: "06:00", title: "前往高雄機場", transport: "搭乘第一班捷運到高雄機場", details: "5:40 起床準備" },
+                { time: "08:15", title: "✈️ 飛往成田機場", transport: "亞航 FD 234", details: "13:05 抵達成田機場第二航廈" },
+                { time: "14:00", title: "前往飯店與 Check-in", transport: "搭乘 Skyliner (週六約 15 分一班，45分至日暮里) ➡️ 轉搭京濱東北線至赤羽", details: "WING HOTEL AKABANE Check In (走路至赤羽車站約 12 分)" },
+                { time: "18:00", title: "🌇 谷中銀座商店街", transport: "赤羽站搭京濱東北線至日暮里站 (20分鐘)", details: "觀賞最美夕陽黃昏坡道" },
+                { time: "19:00", title: "🍱 上野晚餐", transport: "再往南坐一站 (6分鐘) 到京成上野站", details: "名代宇奈とと上野店 (備案: 鴨to蔥拉麵 / Aidaya / 肉の大山可樂餅)" }
+            ]
+        },
+        {
+            dayId: 2, date: "5/18 (日)", title: "淺草 - 晴空塔",
+            events: [
+                { time: "08:00", title: "前往淺草", transport: "搭乘宇都宮線/高崎線至上野 (約30分) ➡️ 換銀座線至淺草", details: "從飯店步行約12分至赤羽站搭車" },
+                { time: "09:00", title: "Ginza Brazil", transport: "步行", details: "吃炸豬排三明治" },
+                { time: "11:00", title: "淺草周邊散步", transport: "步行", details: "仲見世通商店街 ➡️ 八十八良葉舍 (抹茶) ➡️ 淺草寺" },
+                { time: "15:00", title: "壽喜燒 米久本店", transport: "步行", details: "(備案: 浅草今半)" },
+                { time: "17:00", title: "前往晴空塔", transport: "搭乘 東武晴空塔線 前往押上站 (約20分)", details: "" },
+                { time: "18:00", title: "🗼 晴空塔觀景與逛街", transport: "步行", details: "重要：18:00 前取票。隨後逛天文館、晴空街道、吃東毛酪農63℃、寶可夢中心" },
+                { time: "21:00", title: "返回飯店", transport: "搭車返回赤羽", details: "順路買隔天早餐" }
+            ]
+        },
+        {
+            dayId: 3, date: "5/19 (一)", title: "富士山河口湖",
+            events: [
+                { time: "07:00", title: "出發前往河口湖", transport: "赤羽搭埼京線至新宿 ➡️ 07:45 轉搭富士急巴士", details: "09:40 抵達富士河口湖站轉租車自駕" },
+                { time: "09:00", title: "羅森便利商店", transport: "🚗 自駕", details: "河口湖站前店 / 富士河口湖町公所前店" },
+                { time: "10:00", title: "天上山公園 & 纜車", transport: "🚗 自駕 + 🚠 搭乘纜車", details: "包含兔子神社" },
+                { time: "13:00", title: "午餐: ほうとう 不動", transport: "🚗 自駕", details: "(備案: 餺飥研究所)" },
+                { time: "14:00", title: "淺間神社 & 新倉富士", transport: "🚗 自駕", details: "淺間神社 ➡️ 新倉富士淺間公園 (五重塔) ➡️ 富士吉田商店街 (西裏通)" },
+                { time: "17:00", title: "還車 & 買土產", transport: "🚗 自駕返回河口湖站", details: "還車後去 Gateway Fujiyama 河口湖站店買土產" },
+                { time: "18:15", title: "🚌 搭車返回新宿", transport: "高速巴士", details: "晚餐: 鳳仙花拉麵 (備案: 麵屋海神)" }
+            ]
+        },
+        {
+            dayId: 4, date: "5/20 (二)", title: "上野",
+            events: [
+                { time: "08:00", title: "前往上野", transport: "搭乘 宇都宮線 到上野 (約30分)", details: "飯店步行 12 分鐘至赤羽車站" },
+                { time: "09:00", title: "上野恩賜公園", transport: "步行", details: "星巴克 / 東照宮 / 花園稻荷神社 / 清水觀音堂 / 不忍池" },
+                { time: "12:00", title: "午餐: 沼津港 海將", transport: "步行", details: "上野一號店 吃到飽" },
+                { time: "13:00", title: "阿美橫町購物", transport: "步行", details: "二木的菓子 / 多慶屋 / Yodobashi Camera / 丸井百貨" },
+                { time: "15:00", title: "點心時間", transport: "步行", details: "あんみつ みはし (甜點)" },
+                { time: "18:00", title: "晚餐: 燒肉 房家", transport: "步行", details: "房家ホルモン館 上野六丁目店" },
+                { time: "19:00", title: "不忍池夜景", transport: "步行", details: "看完夜景後搭車回飯店" }
+            ]
+        },
+        {
+            dayId: 5, date: "5/21 (三)", title: "鎌倉",
+            events: [
+                { time: "08:00", title: "前往鎌倉", transport: "赤羽站搭 高崎線 到戶塚 ➡️ 轉 湘南新宿線 到鎌倉", details: "" },
+                { time: "09:00", title: "Cafe Yoridocoro", transport: "步行", details: "超人氣鐵道咖啡廳 (先排隊)" },
+                { time: "10:00", title: "鎌倉神社巡禮", transport: "步行", details: "鶴岡八幡宮 (白鴿鈴鐺) ➡️ 錢洗神社 (小扇子籤)" },
+                { time: "11:00", title: "鎌倉小町通", transport: "步行", details: "Giraffa咖哩麵包 / 開運大佛燒 / 夢見屋糰子 / 鎌倉茶々抹茶冰淇淋" },
+                { time: "13:00", title: "江之電沿線", transport: "🚃 搭乘江之電", details: "鎌倉高校前站 (灌籃高手) ➡️ 長谷站 (鎌倉大佛)" },
+                { time: "15:00", title: "江之島", transport: "步行 / 自動扶梯往上", details: "弁天橋 ➡️ 仲見世通 (藍冰淇淋、包子) ➡️ 邊津宮、中津宮" },
+                { time: "19:00", title: "江之島展望燈塔", transport: "步行", details: "看夜景後搭車回飯店" }
+            ]
+        },
+        {
+            dayId: 6, date: "5/22 (四)", title: "原宿 - 涉谷 - 新宿",
+            events: [
+                { time: "08:00", title: "松屋早餐與出發", transport: "搭乘 湘南新宿線 (需轉車，約35分)", details: "步行至赤羽車站約12分" },
+                { time: "10:00", title: "明治神宮", transport: "步行", details: "明治神宮 ➡️ 代代木公園" },
+                { time: "12:00", title: "原宿商圈", transport: "步行", details: "竹下通 ➡️ 貓街 ➡️ 香蕉之神" },
+                { time: "13:00", title: "忠犬小八 & 輕食", transport: "步行", details: "八公忠犬像 / hale'aina HOA (夏威夷輕食)" },
+                { time: "14:00", title: "涉谷商圈", transport: "步行", details: "涉谷商店街 ➡️ Sakura Stage ➡️ PARCO ➡️ i'm donut" },
+                { time: "17:00", title: "前往新宿", transport: "搭車前往新宿", details: "晚餐: 薄利多賣半兵ヱ居酒屋" },
+                { time: "20:00", title: "返回飯店", transport: "搭車返回赤羽", details: "順路買早餐" }
+            ]
+        },
+        {
+            dayId: 7, date: "5/23 (五)", title: "築地 - 豐洲 - 台場",
+            events: [
+                { time: "08:00", title: "前往築地", transport: "搭乘 宇都宮線 至上野 ➡️ 轉 日比谷線 到築地 (約40分)", details: "" },
+                { time: "09:00", title: "築地市場吃早餐", transport: "步行", details: "山長玉子燒 / まぐろや黒銀 / 丸豊飯糰 / 米本珈琲 / Matcha Stand" },
+                { time: "11:00", title: "月島", transport: "走路 (20分) 或搭車至月島", details: "12:00 西仲通商店吃文字燒" },
+                { time: "13:00", title: "前往豐洲", transport: "搭乘 有樂町線 去豐洲", details: "豐洲市場 / 江户前場下町" },
+                { time: "15:00", title: "teamLab & LaLaport", transport: "步行", details: "重要：teamLab Planets 請備妥憑證。結束後逛 LaLaport" },
+                { time: "17:00", title: "前往台場", transport: "搭乘 百合海鷗線 到 台場 (約15分)", details: "獨角獸鋼彈 (1/3/5/7點燈)" },
+                { time: "18:00", title: "台場商圈", transport: "步行", details: "Aqua city (Joypolis遊樂區) / Diver city 美食街" },
+                { time: "20:00", title: "彩虹大橋夜景", transport: "步行", details: "台場海濱公園賞夜景，結束後搭車回飯店" }
+            ]
+        }
+    ];
+
+    let currentDayId = 1;
+
+    // 渲染日期導航列
+    function renderNav() {
+        const navContainer = document.getElementById('day-nav');
+        navContainer.innerHTML = '';
+        itineraryData.forEach(day => {
+            const btn = document.createElement('button');
+            const isActive = day.dayId === currentDayId;
+            btn.className = `font-bold text-lg whitespace-nowrap pb-1 border-b-2 transition-colors ${isActive ? 'text-black border-black' : 'text-gray-400 border-transparent'}`;
+            btn.innerText = `Day ${day.dayId}`;
+            btn.onclick = () => {
+                currentDayId = day.dayId;
+                renderNav();
+                renderTimeline();
+            };
+            navContainer.appendChild(btn);
+        });
+    }
+
+    // 渲染當日時間軸與手風琴卡片
+    function renderTimeline() {
+        const dayData = itineraryData.find(d => d.dayId === currentDayId);
+        document.getElementById('current-date-title').innerText = `${dayData.date} • ${dayData.title}`;
+        
+        const container = document.getElementById('timeline-container');
+        // 保留背景直線
+        container.innerHTML = '<div class="absolute top-0 bottom-0 left-[54px] w-0.5 bg-gray-200 z-0"></div>';
+
+        dayData.events.forEach((event, index) => {
+            const el = document.createElement('div');
+            el.className = 'relative z-10 flex mb-5';
+            
+            // 動態生成 HTML 結構
+            el.innerHTML = `
+                <div class="w-14 pt-3 text-right pr-4 shrink-0">
+                    <span class="text-[13px] font-black text-gray-800 tracking-tighter">${event.time}</span>
+                </div>
+                
+                <div class="w-4 h-4 rounded-full border-4 border-[#F8F9FA] bg-blue-500 absolute left-[47px] top-3.5 shadow-sm"></div>
+                
+                <div class="ml-4 flex-1 bg-white rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.04)] border border-gray-100 overflow-hidden">
+                    
+                    <div class="p-4 flex justify-between items-center cursor-pointer active:bg-gray-50 transition-colors" onclick="toggleCard(${index})">
+                        <h3 class="font-bold text-gray-900 text-[15px]">${event.title}</h3>
+                        <i class="fa-solid fa-chevron-down text-gray-400 text-sm chevron" id="chevron-${index}"></i>
+                    </div>
+
+                    <div class="card-details bg-gray-50/50 border-t border-gray-50" id="details-${index}">
+                        <div class="p-4 pt-2">
+                            <div class="mb-3">
+                                <span class="text-xs font-bold text-gray-400 mb-1 block">🚇 前往方式</span>
+                                <p class="text-sm text-gray-700 leading-relaxed font-medium text-blue-800 bg-blue-50/50 p-2 rounded-lg border border-blue-100">
+                                    ${event.transport}
+                                </p>
+                            </div>
+                            
+                            ${event.details ? `
+                            <div class="mb-4">
+                                <span class="text-xs font-bold text-gray-400 mb-1 block">📝 行程筆記</span>
+                                <p class="text-[13px] text-gray-600 leading-relaxed">${event.details}</p>
+                            </div>` : ''}
+
+                            <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.title)}" target="_blank" class="block w-full bg-white text-gray-700 border border-gray-200 text-center text-[13px] font-bold py-2.5 rounded-xl shadow-sm active:bg-gray-100 transition">
+                                <i class="fa-solid fa-location-arrow text-blue-500 mr-1"></i> 打開 Google Maps
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(el);
+        });
+    }
+
+    // 控制手風琴展開/收起的邏輯
+    function toggleCard(index) {
+        const detailsObj = document.getElementById(`details-${index}`);
+        const chevronObj = document.getElementById(`chevron-${index}`);
+        
+        // 切換 CSS class
+        detailsObj.classList.toggle('open');
+        chevronObj.classList.toggle('open');
+    }
+
+    // 初始化頁面
+    renderNav();
+    renderTimeline();
+
+</script>
 </body>
 </html>
