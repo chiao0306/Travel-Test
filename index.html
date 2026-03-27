@@ -7,143 +7,150 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
-    
     <style>
-        body {
-            font-family: 'Noto Sans TC', sans-serif;
-            background-color: #F2F2F7; /* iOS 系統底色 */
-            -webkit-tap-highlight-color: transparent;
-        }
-        /* 隱藏滾動條但保留滾動功能 */
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: #F8F9FA; -webkit-tap-highlight-color: transparent; }
         ::-webkit-scrollbar { display: none; }
+        .app-container { max-width: 480px; margin: 0 auto; background-color: #F8F9FA; min-height: 100vh; position: relative; padding-bottom: 90px; }
         
-        .app-container {
-            max-width: 480px; /* 限制在手機寬度 */
-            margin: 0 auto;
-            background-color: #F9F9FB;
-            min-height: 100vh;
-            position: relative;
-            padding-bottom: 90px; /* 留空間給底部導航列 */
-            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+        /* 封面圖特效 */
+        .hero-image {
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1503899036084-c55cdd92da26?q=80&w=800&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
         }
-        
-        /* 標籤樣式 */
-        .badge-food { background: #FFF0E6; color: #FF9F0A; }
-        .badge-buy { background: #EAEBFE; color: #5E5CE6; }
-        .badge-story { background: #E8F5E9; color: #34C759; }
-        .badge-alert { background: #FFEBEE; color: #FF3B30; }
+
+        /* 垂直時間軸的線 */
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 64px; /* 對齊圓點 */
+            width: 2px;
+            background-color: #E5E7EB;
+            z-index: 0;
+        }
     </style>
 </head>
-<body class="text-gray-800">
+<body>
 
-<div class="app-container">
-    <div class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 px-5 py-4">
-        <h1 class="text-xl font-black text-gray-900 tracking-wider">✈️ 2025 東京自駕</h1>
+<div class="app-container shadow-xl">
+    
+    <div class="hero-image h-64 w-full relative rounded-b-3xl shadow-md">
+        <div class="absolute top-0 w-full p-5 flex justify-between items-center text-white">
+            <i class="fa-solid fa-chevron-left text-xl"></i>
+            <div class="flex gap-3">
+                <i class="fa-solid fa-share-nodes text-xl"></i>
+                <i class="fa-regular fa-heart text-xl"></i>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-5 left-5 text-white">
+            <span class="bg-black/30 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold mb-2 inline-block">自駕遊</span>
+            <h1 class="text-3xl font-black mb-1">2025 東京富士山</h1>
+            <p class="text-sm opacity-90 mb-3"><i class="fa-regular fa-calendar mr-1"></i> 共 4 天</p>
+            <div class="flex -space-x-2">
+                <img class="w-8 h-8 rounded-full border-2 border-white object-cover" src="https://ui-avatars.com/api/?name=Me&background=0D8ABC&color=fff" alt="User">
+                <div class="w-8 h-8 rounded-full border-2 border-white bg-gray-200 flex items-center justify-center text-xs text-gray-600">+1</div>
+            </div>
+        </div>
     </div>
 
-    <div class="px-5 py-4">
+    <div class="px-5 py-4 flex justify-between items-center sticky top-0 bg-[#F8F9FA]/90 backdrop-blur-md z-40 border-b border-gray-100">
+        <div class="flex gap-4 overflow-x-auto no-scrollbar pb-1">
+            <button class="font-bold text-lg text-black border-b-2 border-black pb-1 whitespace-nowrap">Day 1</button>
+            <button class="font-bold text-lg text-gray-400 pb-1 whitespace-nowrap">Day 2</button>
+            <button class="font-bold text-lg text-gray-400 pb-1 whitespace-nowrap">Day 3</button>
+            <button class="font-bold text-lg text-gray-400 pb-1 whitespace-nowrap">Day 4</button>
+        </div>
+        <div class="w-12 h-12 bg-white rounded-xl shadow-sm border border-gray-200 flex items-center justify-center overflow-hidden relative cursor-pointer active:scale-95 transition-transform">
+            <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=100&h=100&fit=crop" class="absolute inset-0 opacity-50" alt="Map">
+            <i class="fa-solid fa-map-location-dot z-10 text-gray-800 text-lg"></i>
+        </div>
+    </div>
+
+    <div class="px-5 py-6 timeline-container relative">
         
-        <div id="day1" class="tab-content">
-            <div class="bg-blue-50 rounded-2xl p-4 mb-6 flex items-center justify-between border border-blue-100">
+        <div class="relative z-10 flex mb-8">
+            <div class="w-12 pt-1 text-right pr-3">
+                <span class="text-sm font-bold text-gray-800 block">13:05</span>
+            </div>
+            <div class="w-6 h-6 rounded-full border-4 border-[#F8F9FA] bg-blue-500 absolute left-[52px] top-1"></div>
+            <div class="ml-8 bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex-1">
+                <h3 class="font-bold text-gray-900 mb-1">抵達成田機場</h3>
+                <p class="text-xs text-gray-500 mb-3">亞航 FD: 234，辦理租車手續。</p>
+                <a href="https://www.google.com/maps/dir/?api=1&destination=名代+宇奈とと+上野店1" target="_blank" class="block w-full bg-blue-50 text-blue-600 text-center text-xs font-bold py-2 rounded-lg">
+                    <i class="fa-solid fa-car-side"></i> 導航至 WING HOTEL
+                </a>
+            </div>
+        </div>
+
+        <div class="relative z-10 flex mb-8">
+            <div class="w-12 pt-1 text-right pr-3">
+                <span class="text-sm font-bold text-gray-800 block">16:30</span>
+                <span class="text-[10px] text-gray-400">1.5 hr</span>
+            </div>
+            <div class="w-6 h-6 rounded-full border-4 border-[#F8F9FA] bg-indigo-500 absolute left-[52px] top-1"></div>
+            
+            <div class="ml-8 bg-white rounded-2xl shadow-sm border border-gray-100 flex-1 overflow-hidden">
+                <div class="h-24 w-full bg-gray-200">
+                    <img src="https://images.unsplash.com/photo-1542051812871-f1110db44547?q=80&w=400&h=200&fit=crop" class="w-full h-full object-cover" alt="谷中銀座">
+                </div>
+                <div class="p-4">
+                    <h3 class="font-bold text-gray-900 mb-1">谷中銀座商店街</h3>
+                    <div class="flex gap-2 mb-2">
+                        <span class="bg-indigo-50 text-indigo-600 text-[10px] font-bold px-2 py-0.5 rounded">夕陽階梯</span>
+                        <span class="bg-orange-50 text-orange-600 text-[10px] font-bold px-2 py-0.5 rounded">貓尾巴雞蛋糕</span>
+                    </div>
+                    <p class="text-xs text-gray-500">充滿昭和風情的貓咪老街，傍晚光影最美。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="relative z-10 flex mb-2">
+            <div class="w-12 pt-1 text-right pr-3">
+                <span class="text-sm font-bold text-gray-800 block">19:00</span>
+            </div>
+            <div class="w-6 h-6 rounded-full border-4 border-[#F8F9FA] bg-orange-400 absolute left-[52px] top-1"></div>
+            
+            <div class="ml-8 bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex-1 flex gap-3">
+                <div class="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
+                    <img src="https://images.unsplash.com/photo-1615486171448-4af62939b4b0?q=80&w=200&h=200&fit=crop" class="w-full h-full object-cover" alt="鰻魚飯">
+                </div>
                 <div>
-                    <p class="text-xs text-blue-600 font-bold mb-1">Day 1 • 東京市區</p>
-                    <p class="text-sm font-medium text-gray-700">18°C 晴時多雲 | 降雨 10%</p>
+                    <h3 class="font-bold text-gray-900 text-sm mb-1">名代 宇奈とと 上野店</h3>
+                    <p class="text-[11px] text-gray-500 mb-1">超高 CP 值的現烤鰻魚飯</p>
+                    <a href="https://www.google.com/maps/dir/?api=1&destination=名代+宇奈とと+上野店2" target="_blank" class="text-blue-500 text-xs font-bold"><i class="fa-solid fa-location-arrow"></i> 導航</a>
                 </div>
-                <i class="fa-solid fa-cloud-sun text-3xl text-blue-400"></i>
-            </div>
-
-            <div class="bg-white rounded-2xl p-5 mb-4 shadow-sm border border-gray-100 relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-1.5 h-full bg-blue-400"></div>
-                <div class="flex items-center mb-2">
-                    <span class="text-gray-400 font-mono font-bold text-sm mr-3">08:15</span>
-                    <h3 class="font-bold text-lg text-gray-900">抵達成田機場</h3>
-                </div>
-                <p class="text-sm text-gray-500 mb-4 ml-11">亞航 FD: 234，轉乘 Skyliner 至日暮里，再轉京濱東北線至赤羽。</p>
-                <a href="https://maps.google.com/?q=WING+HOTEL+AKABANE" target="_blank" class="ml-11 block bg-gray-50 text-blue-600 text-center text-sm font-bold py-2.5 rounded-xl border border-gray-200 active:bg-gray-100 transition">
-                    <i class="fa-solid fa-car-side mr-1"></i> 導航至 WING HOTEL
-                </a>
-            </div>
-
-            <div class="bg-white rounded-2xl p-5 mb-4 shadow-sm border border-gray-100 relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-1.5 h-full bg-indigo-500"></div>
-                <div class="flex items-center mb-2">
-                    <span class="text-gray-400 font-mono font-bold text-sm mr-3">傍晚</span>
-                    <h3 class="font-bold text-lg text-gray-900">谷中銀座商店街</h3>
-                </div>
-                <div class="ml-11 mb-3 flex flex-wrap gap-2">
-                    <span class="badge-story text-xs font-bold px-2.5 py-1 rounded-lg"><i class="fa-solid fa-book-open mr-1"></i>夕陽階梯</span>
-                    <span class="badge-buy text-xs font-bold px-2.5 py-1 rounded-lg"><i class="fa-solid fa-bag-shopping mr-1"></i>貓尾巴雞蛋糕</span>
-                </div>
-                <p class="text-sm text-gray-500 mb-4 ml-11">充滿昭和風情的貓咪老街，傍晚光影最美。</p>
-                <a href="https://maps.google.com/?q=Yanaka+Ginza" target="_blank" class="ml-11 block bg-gray-50 text-indigo-600 text-center text-sm font-bold py-2.5 rounded-xl border border-gray-200 active:bg-gray-100 transition">
-                    <i class="fa-solid fa-location-dot mr-1"></i> 導航前往
-                </a>
-            </div>
-
-            <div class="bg-white rounded-2xl p-5 mb-4 shadow-sm border border-gray-100 relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-1.5 h-full bg-orange-400"></div>
-                <div class="flex items-center mb-2">
-                    <span class="text-gray-400 font-mono font-bold text-sm mr-3">晚上</span>
-                    <h3 class="font-bold text-lg text-gray-900">名代 宇奈とと 上野店</h3>
-                </div>
-                <div class="ml-11 mb-3 flex flex-wrap gap-2">
-                    <span class="badge-food text-xs font-bold px-2.5 py-1 rounded-lg"><i class="fa-solid fa-utensils mr-1"></i>雙倍鰻魚飯</span>
-                </div>
-                <p class="text-sm text-gray-500 mb-4 ml-11">吃完超高 CP 值的現烤鰻魚飯，順便逛阿美橫町！</p>
             </div>
         </div>
 
-        <div id="day2" class="tab-content hidden">
-            <div class="bg-white rounded-2xl p-8 text-center shadow-sm border border-gray-100 mt-10">
-                <i class="fa-solid fa-tower-broadcast text-4xl text-indigo-300 mb-4"></i>
-                <h3 class="font-bold text-gray-700 mb-2">Day 2 晴空塔</h3>
-                <p class="text-sm text-gray-400">（套用相同卡片格式即可無限擴充）</p>
+    </div>
+
+    <div class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-100 pb-safe pt-2 px-6 flex justify-around items-center z-50">
+        <div class="flex flex-col items-center p-2 text-blue-600">
+            <i class="fa-solid fa-calendar-days text-xl mb-1"></i>
+            <span class="text-[10px] font-bold">行程</span>
+        </div>
+        <div class="flex flex-col items-center p-2 text-gray-400">
+            <i class="fa-solid fa-compass text-xl mb-1"></i>
+            <span class="text-[10px] font-bold">探索</span>
+        </div>
+        <div class="flex flex-col items-center p-2 text-gray-400 relative">
+            <div class="absolute -top-6 bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg shadow-blue-200 border-4 border-white">
+                <i class="fa-solid fa-plus text-xl"></i>
             </div>
         </div>
-
+        <div class="flex flex-col items-center p-2 text-gray-400">
+            <i class="fa-solid fa-wallet text-xl mb-1"></i>
+            <span class="text-[10px] font-bold">記帳</span>
         </div>
-
-    <div class="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-lg border-t border-gray-200 pb-safe pt-2 px-6 flex justify-between items-center z-50 shadow-[0_-10px_20px_rgba(0,0,0,0.03)]" style="padding-bottom: env(safe-area-inset-bottom, 20px);">
-        <button onclick="switchTab('day1', this)" class="nav-item flex flex-col items-center p-2 text-blue-600 w-16">
-            <i class="fa-solid fa-plane-arrival text-xl mb-1"></i>
-            <span class="text-[10px] font-bold">Day 1</span>
-        </button>
-        <button onclick="switchTab('day2', this)" class="nav-item flex flex-col items-center p-2 text-gray-400 hover:text-gray-600 transition w-16">
-            <i class="fa-solid fa-tower-broadcast text-xl mb-1"></i>
-            <span class="text-[10px] font-bold">Day 2</span>
-        </button>
-        <button onclick="switchTab('day3', this)" class="nav-item flex flex-col items-center p-2 text-gray-400 hover:text-gray-600 transition w-16">
-            <i class="fa-solid fa-mountain-sun text-xl mb-1"></i>
-            <span class="text-[10px] font-bold">Day 3</span>
-        </button>
-        <button onclick="switchTab('day4', this)" class="nav-item flex flex-col items-center p-2 text-gray-400 hover:text-gray-600 transition w-16">
-            <i class="fa-solid fa-city text-xl mb-1"></i>
-            <span class="text-[10px] font-bold">Day 4</span>
-        </button>
+        <div class="flex flex-col items-center p-2 text-gray-400">
+            <i class="fa-solid fa-user text-xl mb-1"></i>
+            <span class="text-[10px] font-bold">我的</span>
+        </div>
     </div>
 </div>
-
-<script>
-    function switchTab(tabId, element) {
-        // 隱藏所有內容
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-        // 顯示目標內容
-        document.getElementById(tabId).classList.remove('hidden');
-        
-        // 重置所有按鈕顏色
-        document.querySelectorAll('.nav-item').forEach(btn => {
-            btn.classList.remove('text-blue-600');
-            btn.classList.add('text-gray-400');
-        });
-        
-        // 點亮當前按鈕
-        element.classList.remove('text-gray-400');
-        element.classList.add('text-blue-600');
-        
-        // 讓頁面滾動回頂部
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-</script>
 
 </body>
 </html>
